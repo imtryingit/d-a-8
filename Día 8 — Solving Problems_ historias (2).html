@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Día 8 — Solving Problems: historias</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;800&family=Newsreader:opsz,wght@6..72,400;6..72,600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f4f8f7;--ink:#1b2540;--mut:#5b6785;--card:#fff;--line:#cfe0da;--acc:#1fa88a;--mix:24%;
+--t1:#0d9488;--t2:#0284c7;--t3:#4f46e5;--t4:#a21caf;--t5:#dc2626;--t6:#ea580c;--t7:#ca8a04;--t8:#db2777;--t9:#16a34a;--t10:#84cc16;--t11:#64748b;--t12:#92400e;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1626;--ink:#e8edf7;--mut:#9aa6c2;--card:#172036;--line:#2a3652;--acc:#3fd0ae;--mix:34%}}
+*{box-sizing:border-box}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 120px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 "Bricolage Grotesque",system-ui,sans-serif}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:10}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+h1{font-weight:800;font-size:clamp(2rem,7vw,3.2rem);line-height:1.02;margin:0 0 10px;letter-spacing:-.02em}
+h2{font-weight:800;font-size:1.35rem;margin:38px 0 6px}
+.lead{color:var(--mut);max-width:60ch;margin:0 0 18px}
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding:10px 0 8px;border-bottom:1px solid var(--line)}
+.leg{display:flex;gap:6px;overflow-x:auto;padding-bottom:6px;scrollbar-width:thin}
+.leg button{flex:none;border:0;border-bottom:3px solid var(--c);background:color-mix(in srgb,var(--c) var(--mix),transparent);color:var(--ink);font:600 .78rem "Bricolage Grotesque",sans-serif;padding:5px 9px;border-radius:6px 6px 0 0;cursor:pointer}
+.leg button.on{background:var(--c);color:#fff}
+.ctl{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;font-size:.85rem;color:var(--mut)}
+.ctl label{display:flex;gap:5px;align-items:center;cursor:pointer}
+.ctl .mode{margin-left:auto;display:flex;gap:4px}
+.ctl .mode button{border:1px solid var(--line);background:var(--card);color:var(--ink);padding:4px 10px;border-radius:99px;font:600 .8rem "Bricolage Grotesque",sans-serif;cursor:pointer}
+.ctl .mode button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+button:focus-visible,input:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.story{margin-top:26px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 18px 8px}
+.story h3{display:flex;justify-content:space-between;gap:10px;align-items:center;margin:0 0 10px;font-size:1.15rem}
+.story h3 button{border:1px solid var(--line);background:none;color:var(--ink);border-radius:99px;padding:4px 12px;font:600 .8rem "Bricolage Grotesque",sans-serif;cursor:pointer}
+.s{display:flex;flex-direction:column;margin:0 0 12px;font:400 1.14rem/1.75 Newsreader,Georgia,serif;cursor:pointer}
+.es{display:none;font:500 .88rem/1.4 "Bricolage Grotesque",sans-serif;color:var(--mut)}
+.show-es .es,.mode-tr .es{display:block}
+.mode-tr .es{order:-1;color:var(--ink);font-size:1rem}
+.mode-tr .en{filter:blur(7px);transition:filter .25s}
+.mode-tr .s.shown .en{filter:none}
+.t{background:color-mix(in srgb,var(--c) var(--mix),transparent);border-bottom:2px solid var(--c);padding:0 2px;border-radius:3px;transition:opacity .2s}
+.k{font:800 .82em "Bricolage Grotesque",sans-serif;border:1.5px solid var(--ink);border-radius:99px;padding:0 7px;margin:0 1px;white-space:nowrap}
+.v{font-style:normal;font-weight:600;border-bottom:2px dotted var(--acc)}
+.off-t .t{background:none;border-color:transparent}
+.off-k .k{border-color:transparent;font:inherit;padding:0}
+.off-v .v{border-color:transparent;font-weight:inherit}
+.t.dim{opacity:.3;background:none;border-color:transparent}
+.chunks{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px}
+.chunks button{text-align:left;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;padding:10px 12px;font:600 .95rem "Bricolage Grotesque",sans-serif;cursor:pointer}
+.chunks small{display:block;color:var(--mut);font-weight:500;margin-top:2px}
+.chunks button:hover{border-color:var(--acc)}
+.pv{display:flex;flex-wrap:wrap;gap:6px}
+.pv span{border:1px dotted var(--acc);border-radius:99px;padding:3px 11px;font-size:.88rem}
+.t[data-t="5"],.t[data-t="6"]{font-weight:600;border-bottom-width:3px}
+.today{margin:6px 0 20px;border-left:5px solid var(--t5);padding:4px 0 4px 16px}
+.today h2{margin:0 0 4px}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px;margin:12px 0}
+.two div{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;font:400 1.1rem/1.6 Newsreader,Georgia,serif}
+.two strong{display:block;font:800 .95rem "Bricolage Grotesque",sans-serif;margin-bottom:4px}
+.two em{display:block;font:500 .85rem "Bricolage Grotesque",sans-serif;color:var(--mut);font-style:normal}
+.today .combo{font:600 1.2rem/1.7 Newsreader,Georgia,serif;margin:8px 0}
+#focus{border:2px solid var(--t5);background:none;color:var(--ink);border-radius:99px;padding:6px 14px;font:700 .85rem "Bricolage Grotesque",sans-serif;cursor:pointer}
+#focus.on{background:var(--t5);color:#fff}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<main>
+<h1>Día 8 — Solving Problems</h1>
+<p class="lead">Tres historias con los 12 tiempos verbales, cargadas de conectores y del vocabulario del día. Toca un color de arriba para aislar un tiempo. Cambia a “Español → inglés” para traducir en voz alta y toca la frase para comprobar.</p>
+
+<section class="today">
+<h2>Gramática de hoy: Past Simple vs Past Continuous</h2>
+<p class="lead" style="margin:0">Así cuentas qué pasó como hablante B1+: el contexto en progreso y el problema que lo interrumpe.</p>
+<div class="two">
+<div><strong>Past Simple: acción terminada</strong>It <span class="t" style="--c:var(--t5)" data-t="5">stopped</span> working this morning.<em>También: went down, called, explained</em></div>
+<div><strong>Past Continuous: acción en progreso</strong>I <span class="t" style="--c:var(--t6)" data-t="6">was working</span> on my laptop.<em>También: was using, was getting worse</em></div>
+</div>
+<p class="combo">I <span class="t" style="--c:var(--t6)" data-t="6">was working</span> on my laptop <b class="k">when</b> suddenly the internet <span class="t" style="--c:var(--t5)" data-t="5">stopped</span>.</p>
+<p style="margin:6px 0 10px">Linkers para narrar: <b class="k">First</b> <b class="k">Then</b> <b class="k">After that</b> <b class="k">But</b> <b class="k">So</b></p>
+<button id="focus">Resaltar solo Past Simple y Continuous</button>
+</section>
+<div class="bar">
+<div class="leg" id="leg"></div>
+<div class="ctl">
+<label><input type="checkbox" id="ct" checked> Tiempos</label>
+<label><input type="checkbox" id="ck" checked> Conectores</label>
+<label><input type="checkbox" id="cv" checked> Vocabulario</label>
+<label><input type="checkbox" id="ce"> Español</label>
+<div class="mode"><button class="on" data-m="read">Leer</button><button data-m="tr">Español → inglés</button></div>
+</div>
+</div>
+
+<div id="stories"></div>
+
+<h2>Chunks para sonar natural</h2>
+<p class="lead">Toca para escuchar.</p>
+<div class="chunks" id="chunks"></div>
+
+<h2>Phrasal verbs del día</h2>
+<div class="pv" id="pv"></div>
+</main>
+<script>
+const TN=["Present Simple","Present Continuous","Present Perfect","Present Perfect Cont.","Past Simple","Past Continuous","Past Perfect","Past Perfect Cont.","Future Simple","Future Continuous","Future Perfect","Future Perfect Cont."];
+// [n:verbo] = tiempo n · {conector} · *vocabulario del día*
+const S=[
+["Marta y el internet que murió",[
+["First, Marta [1:works] from home, {so} a stable *connection* is really important for her.","Primero, Marta trabaja desde casa, así que una conexión estable es muy importante para ella."],
+["Right now she [2:is sitting] at her laptop, {but} the *signal* is very *slow*.","Ahora mismo está sentada frente a su laptop, pero la señal es muy lenta."],
+["She [3:has already checked] the router, {but} nothing seems to work.","Ya revisó el router, pero nada parece funcionar."],
+["{Also}, she [4:has been waiting] for the *technician* since nine o’clock.","Además, lleva esperando al técnico desde las nueve."],
+["This morning she [6:was working] on a report {when} suddenly the *internet* [5:stopped].","Esta mañana estaba trabajando en un informe cuando de repente el internet dejó de funcionar."],
+["{After that}, she [5:called] the *company* {and} [5:explained] the *issue*.","Después, llamó a la empresa y explicó el problema."],
+["{By the time} the agent answered, she [7:had already restarted] the router twice.","Cuando el agente contestó, ella ya había reiniciado el router dos veces."],
+["She [8:had been trying] to *fix* it for an hour, {so} she was *fed up*.","Llevaba una hora intentando arreglarlo, así que estaba harta."],
+["The agent says a technician [9:will come] this afternoon.","El agente dice que un técnico vendrá esta tarde."],
+["At four o’clock Marta [10:will be waiting] at the door, {but} she hopes it isn’t too late.","A las cuatro Marta estará esperando en la puerta, pero espera que no sea muy tarde."],
+["{By} six, the *company* [11:will have fixed] the *signal*, {and then} she can finish her report.","Para las seis, la empresa habrá arreglado la señal y entonces podrá terminar su informe."],
+["{By} tonight she [12:will have been working] for ten hours without a break, {so} this *solution* had better work!","Para esta noche llevará diez horas trabajando sin descanso, ¡así que esta solución más le vale funcionar!"]]],
+["Daniel y la llamada que se cayó",[
+["Daniel [1:uses] his *phone* for work, {so} a good *signal* is *urgent* for him.","Daniel usa su teléfono para trabajar, así que una buena señal es urgente para él."],
+["At the moment he [2:is standing] on the balcony {because} the *signal* is better there.","En este momento está parado en el balcón porque la señal es mejor allí."],
+["He [3:has called] the *company* three times, {but} the *issue* is *still* there.","Ha llamado a la empresa tres veces, pero el problema sigue ahí."],
+["{Also}, he [4:has been listening] to the same hold music for twenty minutes.","Además, lleva veinte minutos escuchando la misma música de espera."],
+["Yesterday his *phone* [5:went out] *suddenly*, {then} he [5:turned] it on {and} [5:waited].","Ayer su teléfono se apagó de repente, entonces lo encendió y esperó."],
+["He [6:was talking] to a client {when} the call [5:dropped].","Estaba hablando con un cliente cuando la llamada se cortó."],
+["{When} the agent finally answered, he [7:had already tried] every *solution* he knew.","Cuando el agente por fin contestó, él ya había probado todas las soluciones que conocía."],
+["He [8:had been paying] for that *service* for years, {so} he was *fed up*.","Llevaba años pagando ese servicio, así que estaba harto."],
+["The agent promises that someone [9:will look into] it tomorrow.","El agente promete que alguien lo investigará mañana."],
+["At noon he [10:will be checking] the *signal* again, {but} he doesn’t expect a miracle.","Al mediodía estará revisando la señal otra vez, pero no espera un milagro."],
+["{By} Friday the *technician* [11:will have sorted out] the *problem*, {and} Daniel [11:will have forgotten] all about it.","Para el viernes el técnico habrá resuelto el problema y Daniel se habrá olvidado de todo."],
+["{By} the weekend he [12:will have been using] the new *connection* for two days, {so} he will finally relax.","Para el fin de semana llevará dos días usando la nueva conexión, así que por fin se relajará."]]],
+["Laura contra la empresa",[
+["Laura [1:pays] for her *internet* *service* every month, {but} she rarely gets a good *connection*.","Laura paga su servicio de internet cada mes, pero rara vez tiene una buena conexión."],
+["Today she [2:is speaking] to a manager {because} the *issue* is *really* *frustrating*.","Hoy está hablando con un supervisor porque el problema es muy frustrante."],
+["She [3:has asked] for a *solution* many times, {and} the *company* [3:has never given] her a clear answer.","Ha pedido una solución muchas veces y la empresa nunca le ha dado una respuesta clara."],
+["She [4:has been explaining] the same *problem* for a whole week.","Lleva una semana entera explicando el mismo problema."],
+["Last Monday the *service* [5:broke down], {so} she [5:called] immediately.","El lunes pasado el servicio dejó de funcionar, así que llamó de inmediato."],
+["{While} she [6:was waiting] on the *phone*, the *signal* [6:was getting] worse.","Mientras esperaba al teléfono, la señal se ponía cada vez peor."],
+["{Before} the *technician* [5:arrived], she [7:had checked] every cable.","Antes de que llegara el técnico, ella había revisado cada cable."],
+["She [8:had been working] with a weak *connection* for days, {so} she [5:asked] for a manager.","Llevaba días trabajando con una conexión débil, así que pidió hablar con un supervisor."],
+["The manager says, “We [9:will send] someone tomorrow {and} we [9:will give] you a discount.”","El supervisor dice: “Enviaremos a alguien mañana y le daremos un descuento”."],
+["Tomorrow at ten Laura [10:will be waiting], {and} she [10:will be recording] the visit, just in case.","Mañana a las diez Laura estará esperando y estará grabando la visita, por si acaso."],
+["{By} noon they [11:will have repaired] the line, {and} the *problem* will be history.","Para el mediodía habrán reparado la línea y el problema será historia."],
+["{By} next month she [12:will have been enjoying] fast *internet* for weeks, {so} she can finally forget this *issue*.","Para el próximo mes llevará semanas disfrutando de internet rápido, así que por fin podrá olvidar este problema."]]],
+["Sofía y la clase en línea",[
+["Sofía [1:studies] English online, {so} a fast *connection* is *really* important.","Sofía estudia inglés en línea, así que una conexión rápida es muy importante."],
+["Right now she [2:is looking] for a quiet place {because} her *signal* is *slow* at home.","Ahora mismo busca un lugar tranquilo porque su señal es lenta en casa."],
+["She [3:has already called] the *company* twice, {but} the *problem* is *still* here.","Ya llamó a la empresa dos veces, pero el problema sigue ahí."],
+["{Also}, she [4:has been using] her phone as a hotspot all week.","Además, lleva toda la semana usando su teléfono como punto de acceso."],
+["{First}, her *internet* [5:went down] during a class, {then} she [5:closed] the laptop {and} [5:called] her teacher.","Primero, su internet se cayó durante una clase, luego cerró la laptop y llamó a su profesor."],
+["She [6:was speaking] with her teacher {when} the screen [5:froze].","Estaba hablando con su profesor cuando la pantalla se congeló."],
+["{By the time} the class ended, she [7:had missed] half of the lesson.","Cuando terminó la clase, ya se había perdido la mitad de la lección."],
+["She [8:had been waiting] for a *solution* for days, {so} it [6:was driving] her crazy.","Llevaba días esperando una solución, así que la estaba volviendo loca."],
+["The *technician* says he [9:will check] her *connection* tomorrow morning.","El técnico dice que revisará su conexión mañana por la mañana."],
+["At nine o’clock Sofía [10:will be sitting] at her desk, {and} she [10:will be hoping] for good news.","A las nueve Sofía estará sentada en su escritorio y estará esperando buenas noticias."],
+["{By} lunch the *company* [11:will have solved] the *issue*, {and} she can study again in peace.","Para el almuerzo la empresa habrá resuelto el problema y ella podrá estudiar en paz."],
+["{By} Friday she [12:will have been studying] with a stable *signal* for three days, {so} this story will finally be over.","Para el viernes llevará tres días estudiando con una señal estable, así que esta historia por fin habrá terminado."]]],
+["Andrés y el servicio de cable",[
+["Andrés [1:watches] the news every night, {so} he needs a good *service*.","Andrés ve las noticias todas las noches, así que necesita un buen servicio."],
+["Tonight he [2:is calling] the *company* {because} the *signal* is *broken*.","Esta noche está llamando a la empresa porque la señal está dañada."],
+["He [3:has explained] the *issue* three times, {but} nothing seems to work.","Ha explicado el problema tres veces, pero nada parece funcionar."],
+["{Also}, he [4:has been repeating] his address to every agent.","Además, lleva rato repitiendo su dirección a cada agente."],
+["{Last} night the screen [5:went black] {and} Andrés [5:checked] every cable.","Anoche la pantalla se puso negra y Andrés revisó cada cable."],
+["He [6:was watching] a match {when} the *signal* [5:disappeared].","Estaba viendo un partido cuando la señal desapareció."],
+["{Before} he [5:called], he [7:had turned] everything off and on again.","Antes de llamar, ya había apagado y encendido todo de nuevo."],
+["He [8:had been waiting] for ten minutes, {so} he was *fed up* with the *company*.","Llevaba diez minutos esperando, así que estaba harto de la empresa."],
+["The agent says, “A *technician* [9:will visit] you on Thursday.”","El agente dice: “Un técnico lo visitará el jueves”."],
+["On Thursday at eight Andrés [10:will be working], {so} his sister [10:will be waiting] at home.","El jueves a las ocho Andrés estará trabajando, así que su hermana estará esperando en casa."],
+["{By} Friday night the *technician* [11:will have fixed] the *signal*, {and then} Andrés [11:will have watched] the next match.","Para el viernes en la noche el técnico habrá arreglado la señal y entonces Andrés habrá visto el siguiente partido."],
+["{By} Sunday he [12:will have been watching] TV in peace for two days, {and} he will be calm again.","Para el domingo llevará dos días viendo televisión en paz y volverá a estar tranquilo."]]],
+["Camila y la factura",[
+["Camila [1:pays] her *phone* bill online, {but} this month the amount looks strange.","Camila paga su factura del teléfono en línea, pero este mes el monto se ve raro."],
+["Right now she [2:is reading] the bill {because} she wants a clear explanation.","Ahora mismo está leyendo la factura porque quiere una explicación clara."],
+["She [3:has checked] every number, {and} the *company* [3:has charged] her twice.","Ha revisado cada número y la empresa le ha cobrado dos veces."],
+["She [4:has been talking] to the *company* for an hour, {and} the situation is *really* *frustrating*.","Lleva una hora hablando con la empresa y la situación es muy frustrante."],
+["Yesterday she [5:called] the *company* {and} [5:asked] for a refund.","Ayer llamó a la empresa y pidió un reembolso."],
+["She [6:was checking] her account {when} she [5:saw] the extra charge.","Estaba revisando su cuenta cuando vio el cargo extra."],
+["{When} the agent answered, she [7:had already written] down every number.","Cuando el agente contestó, ella ya había anotado cada número."],
+["She [8:had been feeling] calm, {but} after twenty minutes she was *fed up*.","Se había estado sintiendo tranquila, pero después de veinte minutos estaba harta."],
+["The agent promises, “We [9:will return] your money in three days.”","El agente promete: “Le devolveremos su dinero en tres días”."],
+["At noon tomorrow Camila [10:will be checking] her account, {but} she hopes the money is *already* there.","Mañana al mediodía Camila estará revisando su cuenta, pero espera que el dinero ya esté ahí."],
+["{By} Friday the *company* [11:will have returned] the money, {and} the *issue* will be *solved*.","Para el viernes la empresa habrá devuelto el dinero y el problema estará resuelto."],
+["{By} next week she [12:will have been using] the *service* again for days, {so} she will trust the *company* a little more.","Para la próxima semana llevará días usando el servicio otra vez, así que confiará un poco más en la empresa."]]]
+];
+const CH=[["I’m having a problem with…","Estoy teniendo un problema con…"],["My internet isn’t working","Mi internet no funciona"],["It stopped working suddenly","Dejó de funcionar de repente"],["I’ve already tried that","Ya intenté eso"],["Nothing seems to work","Nada parece funcionar"],["Can you help me fix this?","¿Puedes ayudarme a arreglar esto?"],["This is really frustrating","Esto es muy frustrante"],["How long will it take to fix?","¿Cuánto tomará arreglarlo?"],["I need a solution as soon as possible","Necesito una solución lo antes posible"],["Can I speak to a manager?","¿Puedo hablar con un supervisor?"]];
+const PV=["turn on / turn off","check out / find out","deal with / look into","sort out / break down","go out / come back"];
+const $=s=>document.querySelector(s),B=document.body;
+const mk=t=>t.replace(/\[(\d+):([^\]]+)\]/g,'<span class="t" style="--c:var(--t$1)" data-t="$1">$2</span>').replace(/\{([^}]+)\}/g,'<b class="k">$1</b>').replace(/\*([^*]+)\*/g,'<i class="v">$1</i>');
+const plain=t=>t.replace(/\[\d+:|[\]{}*]/g,'');
+function say(t){try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang="en-US";u.rate=.9;speechSynthesis.speak(u)}catch(e){}}
+$("#leg").innerHTML=TN.map((n,i)=>`<button style="--c:var(--t${i+1})" data-n="${i+1}">${n}</button>`).join("");
+$("#stories").innerHTML=S.map((s,i)=>`<section class="story"><h3><span>${s[0]}</span><button data-l="${i}">Escuchar</button></h3>${s[1].map(x=>`<p class="s"><span class="en">${mk(x[0])}</span><span class="es">${x[1]}</span></p>`).join("")}</section>`).join("");
+$("#chunks").innerHTML=CH.map(c=>`<button data-s="${c[0]}">${c[0]}<small>${c[1]}</small></button>`).join("");
+$("#pv").innerHTML=PV.map(p=>`<span>${p}</span>`).join("");
+let f=0;
+$("#leg").onclick=e=>{const b=e.target.closest("button");if(!b)return;const n=b.dataset.n==f?0:+b.dataset.n;f=n;
+document.querySelectorAll("#leg button").forEach(x=>x.classList.toggle("on",+x.dataset.n===n));
+document.querySelectorAll(".t").forEach(x=>x.classList.toggle("dim",n&&x.dataset.t!=n));
+if(n)B.classList.remove("off-t"),$("#ct").checked=true};
+[["ct","off-t"],["ck","off-k"],["cv","off-v"]].forEach(([id,c])=>$("#"+id).onchange=e=>B.classList.toggle(c,!e.target.checked));
+$("#focus").onclick=e=>{const on=!e.target.classList.contains("on");e.target.classList.toggle("on",on);f=0;document.querySelectorAll("#leg button").forEach(x=>x.classList.remove("on"));document.querySelectorAll(".story .t").forEach(x=>x.classList.toggle("dim",on&&x.dataset.t!="5"&&x.dataset.t!="6"));if(on)B.classList.remove("off-t"),$("#ct").checked=true};
+$("#ce").onchange=e=>B.classList.toggle("show-es",e.target.checked);
+document.querySelectorAll(".mode button").forEach(b=>b.onclick=()=>{document.querySelectorAll(".mode button").forEach(x=>x.classList.toggle("on",x===b));B.classList.toggle("mode-tr",b.dataset.m==="tr");document.querySelectorAll(".s.shown").forEach(x=>x.classList.remove("shown"))});
+$("#stories").onclick=e=>{const l=e.target.closest("[data-l]");if(l){say(S[l.dataset.l][1].map(x=>plain(x[0])).join(" "));return}
+const s=e.target.closest(".s");if(s){s.classList.toggle("shown");if(!B.classList.contains("mode-tr"))say(s.querySelector(".en").textContent)}};
+$("#chunks").onclick=e=>{const b=e.target.closest("button");if(b)say(b.dataset.s)};
+</script>
+</body>
+</html>
